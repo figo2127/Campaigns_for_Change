@@ -1,4 +1,5 @@
 import tweepy
+import time
 
 # user secrets
 consumer_key = ''
@@ -28,13 +29,21 @@ def store_last_seen(FILE_NAME, last_seen_id):
     writer.close()
     return 
 
-tweets = api.mentions_timeline(since_id=read_last_seen(FILE_NAME), tweet_mode='extended')
+def reply():
+    tweets = api.mentions_timeline(since_id=read_last_seen(FILE_NAME), tweet_mode='extended')
+    assessment_form = 'https://docs.google.com/forms/d/e/1FAIpQLSegYGV61q18f2BINqrmGTnYYSAPWl6BaloOa8ZSHsNWGp7Qsg/viewform?vc=0&c=0&w=1&flr=0&usp=mail_form_link\n'
+    scheduling_form = 'https://docs.google.com/forms/d/e/1FAIpQLSfSZjA69j-BGIn0oB-DUO56Ue6APpBgiBggPHd2Y3SdfJyQaA/viewform?vc=0&c=0&w=1&flr=0&usp=mail_form_link\n'
 
-for tweet in reversed(tweets):
-    if '#hearmeout' in tweet.full_text.lower():
-        print(str(tweet.id) + ' - ' + tweet.full_text)
-        api.update_status("@" + tweet.user.screen_name + " Don't worry help is on the way :)\n" 
-            + 'Unsure?: https://docs.google.com/forms/d/e/1FAIpQLSegYGV61q18f2BINqrmGTnYYSAPWl6BaloOa8ZSHsNWGp7Qsg/viewform?vc=0&c=0&w=1&flr=0&usp=mail_form_link\n'
-            + 'Book an appointment with our volunteers: ' + 'https://docs.google.com/forms/d/e/1FAIpQLSfSZjA69j-BGIn0oB-DUO56Ue6APpBgiBggPHd2Y3SdfJyQaA/viewform?vc=0&c=0&w=1&flr=0&usp=mail_form_link\n')
-        tweet_id = str(tweet.id)
-        store_last_seen(FILE_NAME, tweet_id)
+    for tweet in reversed(tweets):
+        if '#hearmeout' in tweet.full_text.lower():
+            print(str(tweet.id) + ' - ' + tweet.full_text)
+            api.update_status("@" + tweet.user.screen_name + " Don't worry help is on the way :)\n" 
+                + 'Unsure?: ' + assessment_form 
+                + 'Book an appointment with our volunteers: ' + scheduling_form
+                + ' ' + str(time.time()))
+            tweet_id = str(tweet.id)
+            store_last_seen(FILE_NAME, tweet_id)
+
+while True:
+    reply()
+    time.sleep(3)
