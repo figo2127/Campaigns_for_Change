@@ -9,6 +9,6 @@
 
 #### Instructions to run locally:
 #### 1) Clone this repository. Ensure you have Python installed.
-#### 2) Install tweepy: pip3 install --user tweepy
+#### 2) Install tweepy: ``` pip3 install --user tweepy ```
 #### 3) Navigate to the directory and run: python3 bot.py
 
